@@ -40,7 +40,7 @@ namespace Kumo
 
 		public static void SaveNginxSnippet()
 		{
-			var sb = new StringBuilder("# " + GlobalVars.Config.BlockNote + Environment.NewLine);
+			var sb = new StringBuilder("# Kumo");
 
 			foreach (var blockStruct in GlobalVars.Data.BlockQueue)
 			{

@@ -21,8 +21,8 @@ namespace Kumo
 					var request = new Dictionary<string, object>
 					{
 						["mode"] = BlockMode,
-						["configuration"] = new Dictionary<string, object> {{"target", "ip"}, {"value", ipAddress}},
-						["notes"] = GlobalVars.Config.BlockNote,
+						["configuration"] = new Dictionary<string, object>
+							{ { "target", "ip" }, { "value", ipAddress } }
 					};
 
 					var requestJson = JsonConvert.SerializeObject(request);

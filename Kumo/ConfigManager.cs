@@ -39,8 +39,6 @@ namespace Kumo
 				CloudflareModeDefault = "high",
 				CloudflareManageZones = new string[0],
 
-				BlockNote = "Created by Kumo",
-
 				WatcherTargetFile = "/var/log/nginx/error.log",
 				WatcherCheckSleep = 2_000,
 				

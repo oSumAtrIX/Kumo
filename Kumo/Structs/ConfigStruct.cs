@@ -9,8 +9,6 @@
 		public string CloudflareModeDefault;
 		public string[] CloudflareManageZones;
 
-		public string BlockNote;
-
 		public string WatcherTargetFile;
 		public int WatcherCheckSleep;
 
