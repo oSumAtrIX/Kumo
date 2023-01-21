@@ -33,7 +33,9 @@ namespace Kumo
 			}
 
 			GlobalVars.Config = ConfigManager.ReadConfig(ConfigFileName);
-			GlobalVars.Data = File.Exists(DataFileName) ? DataManager.ReadData(DataFileName) : DataManager.GetDefaultData();
+			GlobalVars.Data = File.Exists(DataFileName)
+				? DataManager.ReadData(DataFileName)
+				: DataManager.GetDefaultData();
 
 			if (string.IsNullOrEmpty(GlobalVars.Config.CloudflareEmail))
 			{
@@ -50,8 +52,10 @@ namespace Kumo
 				SslProtocols = SslProtocols.Tls11 | SslProtocols.Tls12,
 			});
 
-			GlobalVars.Http.DefaultRequestHeaders.TryAddWithoutValidation("X-Auth-Email", GlobalVars.Config.CloudflareEmail);
-			GlobalVars.Http.DefaultRequestHeaders.TryAddWithoutValidation("X-Auth-Key", GlobalVars.Config.CloudflareApiKey);
+			GlobalVars.Http.DefaultRequestHeaders.TryAddWithoutValidation("X-Auth-Email",
+				GlobalVars.Config.CloudflareEmail);
+			GlobalVars.Http.DefaultRequestHeaders.TryAddWithoutValidation("X-Auth-Key",
+				GlobalVars.Config.CloudflareApiKey);
 
 			if (GlobalVars.Config.CloudflareUnderAttackMode)
 			{
@@ -86,10 +90,10 @@ namespace Kumo
 
 			while (true)
 			{
-				GC.Collect();
 				Thread.Sleep(GlobalVars.Config.WatcherCheckSleep);
 
-				var fs = new FileStream(GlobalVars.Config.WatcherTargetFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+				var fs = new FileStream(GlobalVars.Config.WatcherTargetFile, FileMode.Open, FileAccess.Read,
+					FileShare.ReadWrite);
 				if (fs.Length > GlobalVars.Data.WatcherStreamPosition)
 				{
 					parseBuffer = new byte[fs.Length - GlobalVars.Data.WatcherStreamPosition];
@@ -125,7 +129,7 @@ namespace Kumo
 		private static void Parse(byte[] buffer)
 		{
 			var text = Encoding.UTF8.GetString(buffer);
-			var lines = text.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries);
+			var lines = text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
 			Console.WriteLine($"Parsing {lines.Length} lines...");
 
 			foreach (var line in lines)

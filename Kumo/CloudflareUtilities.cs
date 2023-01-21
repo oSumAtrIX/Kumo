@@ -27,7 +27,8 @@ namespace Kumo
 
 					var requestJson = JsonConvert.SerializeObject(request);
 					var response = GlobalVars.Http.SendAsync(
-						new HttpRequestMessage(HttpMethod.Post, "https://api.cloudflare.com/client/v4/user/firewall/access_rules/rules")
+						new HttpRequestMessage(HttpMethod.Post,
+							"https://api.cloudflare.com/client/v4/user/firewall/access_rules/rules")
 						{
 							Content = new StringContent(requestJson, Encoding.UTF8, "application/json")
 						}).GetAwaiter().GetResult();
@@ -35,10 +36,10 @@ namespace Kumo
 					var responseHtml = response.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 					var responseObj = JsonConvert.DeserializeObject<dynamic>(responseHtml);
 
-					var success = (bool) responseObj.success;
+					var success = (bool)responseObj.success;
 					if (success)
 					{
-						return (string) responseObj.result.id;
+						return (string)responseObj.result.id;
 					}
 
 					Debug.WriteLine($"Block() non-success response: {responseHtml}");
@@ -59,7 +60,8 @@ namespace Kumo
 				try
 				{
 					var response = GlobalVars.Http.SendAsync(
-						new HttpRequestMessage(HttpMethod.Delete, "https://api.cloudflare.com/client/v4/user/firewall/access_rules/rules/" + id)
+						new HttpRequestMessage(HttpMethod.Delete,
+							"https://api.cloudflare.com/client/v4/user/firewall/access_rules/rules/" + id)
 						{
 							Content = new StringContent(string.Empty, Encoding.UTF8, "application/json")
 						}).GetAwaiter().GetResult();
@@ -81,7 +83,8 @@ namespace Kumo
 				try
 				{
 					var response = GlobalVars.Http.SendAsync(
-						new HttpRequestMessage(HttpMethod.Patch, $"https://api.cloudflare.com/client/v4/zones/{id}/settings/security_level")
+						new HttpRequestMessage(HttpMethod.Patch,
+							$"https://api.cloudflare.com/client/v4/zones/{id}/settings/security_level")
 						{
 							Content = new StringContent($"{{\"value\":\"{value}\"}}", Encoding.UTF8, "application/json")
 						}).GetAwaiter().GetResult();
