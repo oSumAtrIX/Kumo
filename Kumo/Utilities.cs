@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 
 namespace Kumo
 {
@@ -49,5 +50,7 @@ namespace Kumo
 			File.WriteAllText(GlobalVars.Config.NginxBlockSnippetFile, sb.ToString());
 			GlobalVars.Config.NginxReloadBashCommand.Bash();
 		}
+		
+		internal static void RunInThread(ThreadStart threadStart) => new Thread(threadStart).Start();
 	}
 }

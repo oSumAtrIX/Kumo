@@ -57,7 +57,10 @@ namespace Kumo
 			{
 				foreach (var id in GlobalVars.Config.CloudflareManageZones)
 				{
-					CloudflareUtilities.SecurityLevel(id, GlobalVars.Config.CloudflareModeDefault);
+					Utilities.RunInThread(() =>
+					{
+						CloudflareUtilities.SecurityLevel(id, GlobalVars.Config.CloudflareModeDefault);
+					});
 					Console.WriteLine($"SecurityLevel({id}) = {GlobalVars.Config.CloudflareModeDefault}");
 				}
 			}
@@ -200,14 +203,20 @@ namespace Kumo
 
 				if (value.Timestamps.Count >= abusesToBlock)
 				{
-					var blockStruct = new BlockStruct(value.IpAddress, currentTimestamp + GlobalVars.Config.BlockExpirationTime)
+					Utilities.RunInThread(() =>
 					{
-						BlockId = CloudflareUtilities.Block(value.IpAddress)
-					};
+						var blockStruct = new BlockStruct(
+							value.IpAddress,
+							currentTimestamp + GlobalVars.Config.BlockExpirationTime)
+						{
+							BlockId = CloudflareUtilities.Block(value.IpAddress)
+						};
 
-					Console.WriteLine($"Blocked abusing IP: {blockStruct.IpAddress} (Id = {blockStruct.BlockId})");
+						Console.WriteLine($"Blocked abusing IP: {blockStruct.IpAddress} (Id = {blockStruct.BlockId})");
 
-					GlobalVars.Data.BlockQueue.Enqueue(blockStruct);
+						GlobalVars.Data.BlockQueue.Enqueue(blockStruct);
+					});
+
 					GlobalVars.Data.BlockHashSet.Add(value.IpAddress);
 					blockCounter++;
 
@@ -228,7 +237,7 @@ namespace Kumo
 				{
 					foreach (var id in GlobalVars.Config.CloudflareManageZones)
 					{
-						CloudflareUtilities.SecurityLevel(id, "under_attack");
+						Utilities.RunInThread(() => { CloudflareUtilities.SecurityLevel(id, "under_attack"); });
 						Console.WriteLine($"SecurityLevel({id}) = under_attack");
 					}
 				}
@@ -251,7 +260,10 @@ namespace Kumo
 						{
 							foreach (var id in GlobalVars.Config.CloudflareManageZones)
 							{
-								CloudflareUtilities.SecurityLevel(id, GlobalVars.Config.CloudflareModeDefault);
+								Utilities.RunInThread(() =>
+								{
+									CloudflareUtilities.SecurityLevel(id, GlobalVars.Config.CloudflareModeDefault);
+								});
 								Console.WriteLine($"SecurityLevel({id}) = {GlobalVars.Config.CloudflareModeDefault}");
 							}
 						}
@@ -273,7 +285,7 @@ namespace Kumo
 
 				if (blockStruct.ExpirationTime < currentTimestamp)
 				{
-					CloudflareUtilities.Unblock(blockStruct.BlockId);
+					Utilities.RunInThread(() => { CloudflareUtilities.Unblock(blockStruct.BlockId); });
 					Console.WriteLine($"Unblocked IP: {blockStruct.IpAddress} (Id = {blockStruct.BlockId})");
 
 					GlobalVars.Data.BlockQueue.Dequeue();
